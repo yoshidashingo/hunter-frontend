@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Table, Tooltip } from "antd";
+import { Space, Table, Tooltip, Spin } from "antd";
 import type { TableProps } from "antd";
 import axios from "axios";
 import moment from "moment";
@@ -79,7 +79,11 @@ const App: React.FC = () => {
     useEffect(() => {
         init();
     }, []);
-    return <Table columns={columns} dataSource={data} />;
+    if (data.length) {
+        return <Table columns={columns} dataSource={data} />;
+    } else {
+        return <Spin style={{ display: "flex", justifyContent: "center" }} />;
+    }
 };
 
 export default App;
