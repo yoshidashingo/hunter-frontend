@@ -65,7 +65,7 @@ const App: React.FC = () => {
     async function init() {
         let host = "";
         if (import.meta.env.PROD) {
-            host = "https://8ff3-39-110-219-221.ngrok-free.app";
+            host = "https://hunter.atang.tech";
         }
         const url = host + "/api/stores?limit=1000";
         const res = await axios.get(url, {
