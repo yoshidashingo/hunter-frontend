@@ -65,10 +65,14 @@ const App: React.FC = () => {
     async function init() {
         let host = "";
         if (import.meta.env.PROD) {
-            host = "http://hunter.ap-northeast-1.elasticbeanstalk.com";
+            host = "https://8ff3-39-110-219-221.ngrok-free.app";
         }
         const url = host + "/api/stores?limit=1000";
-        const res = await axios.get(url);
+        const res = await axios.get(url, {
+            headers: {
+                "ngrok-skip-browser-warning": "hi",
+            },
+        });
         const data = res.data.stores;
         setData(data);
     }
