@@ -67,7 +67,7 @@ const App: React.FC = () => {
         if (import.meta.env.PROD) {
             host = "https://hunter.atang.tech";
         }
-        const url = host + "/api/stores?limit=1000";
+        const url = host + "/api/stores?limit=10000";
         const res = await axios.get(url, {
             headers: {
                 "ngrok-skip-browser-warning": "hi",
