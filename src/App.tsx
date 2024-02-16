@@ -10,7 +10,7 @@ import Store from "./Store";
 const { Header, Sider, Content } = Layout;
 
 const App: React.FC = () => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -33,24 +33,6 @@ const App: React.FC = () => {
                 />
             </Sider>
             <Layout>
-                <Header style={{ padding: 0, background: colorBgContainer }}>
-                    <Button
-                        type="text"
-                        icon={
-                            collapsed ? (
-                                <MenuUnfoldOutlined />
-                            ) : (
-                                <MenuFoldOutlined />
-                            )
-                        }
-                        onClick={() => setCollapsed(!collapsed)}
-                        style={{
-                            fontSize: "16px",
-                            width: 64,
-                            height: 64,
-                        }}
-                    />
-                </Header>
                 <Content
                     style={{
                         margin: "24px 16px",

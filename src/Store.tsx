@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Table, Tooltip, Spin } from "antd";
+import { Space, Table, Tooltip, Spin, Cascader } from "antd";
 import type { TableProps } from "antd";
 import axios from "axios";
 import moment from "moment";
@@ -60,30 +60,83 @@ const columns: TableProps["columns"] = [
 ];
 
 const App: React.FC = () => {
+    const [options, setOptions] = useState([]);
     const [data, setData] = useState([]);
-
-    async function init() {
-        let host = "";
-        if (import.meta.env.PROD) {
-            host = "https://8ff3-39-110-219-221.ngrok-free.app";
+    const [loading, setLoading] = useState(false);
+    let host = "";
+    if (import.meta.env.PROD) {
+        host = "https://hunter.atang.tech";
+    }
+    async function list(qs) {
+        setLoading(true);
+        const qsArr = ["limit=1000"];
+        if (qs) {
+            qsArr.push(qs);
         }
-        const url = host + "/api/stores?limit=1000";
-        const res = await axios.get(url, {
-            headers: {
-                "ngrok-skip-browser-warning": "hi",
-            },
-        });
+        const url = host + "/api/stores?" + qsArr.join("&");
+        const res = await axios.get(url);
         const data = res.data.stores;
         setData(data);
+        setLoading(false);
     }
+
+    async function init() {
+        list();
+        const prefecturesRes = await axios.get(`${host}/api/prefectures`);
+        const prefecturesArr = prefecturesRes.data.map((i) => ({
+            value: i.key,
+            label: i.label,
+            isLeaf: false,
+        }));
+        setOptions(prefecturesArr);
+    }
+
+    const onChange = (value, selectedOptions) => {
+        if (value.length === 2) {
+            list(`url=${value[0]}/${value[1].replace("-", "/")}`);
+        }
+    };
+
+    const loadData = async (selectedOptions) => {
+        const targetOption = selectedOptions[selectedOptions.length - 1];
+        const areas = await axios.get(
+            `${host}/api/areas?prefecture=${targetOption.value}`
+        );
+        const arr = areas.data.map((i) => ({
+            value: i.key,
+            label: i.label,
+        }));
+        arr.unshift({
+            value: "",
+            label: "全部",
+        });
+        targetOption.children = arr;
+        setOptions([...options]);
+    };
+
     useEffect(() => {
         init();
     }, []);
-    if (data.length) {
-        return <Table columns={columns} dataSource={data} />;
-    } else {
-        return <Spin style={{ display: "flex", justifyContent: "center" }} />;
-    }
+
+    return (
+        <div direction="vertical">
+            <Space style={{ marginBottom: 20 }}>
+                <div>エリア: </div>
+                <Cascader
+                    options={options}
+                    loadData={loadData}
+                    onChange={onChange}
+                    changeOnSelect
+                />
+            </Space>
+            <Table
+                loading={loading}
+                rowKey="_id"
+                columns={columns}
+                dataSource={data}
+            />
+        </div>
+    );
 };
 
 export default App;
