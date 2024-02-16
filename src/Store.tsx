@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Table, Tooltip, Spin, Cascader } from "antd";
+import { Space, Table, Tooltip, Cascader } from "antd";
 import type { TableProps } from "antd";
 import axios from "axios";
 import moment from "moment";
@@ -119,7 +119,7 @@ const App: React.FC = () => {
     }, []);
 
     return (
-        <div direction="vertical">
+        <div>
             <Space style={{ marginBottom: 20 }}>
                 <div>エリア: </div>
                 <Cascader
