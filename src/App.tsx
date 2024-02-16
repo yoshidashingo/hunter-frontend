@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    BankOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu, Button, theme } from "antd";
+import { BankOutlined } from "@ant-design/icons";
+import { Layout, Menu, theme } from "antd";
 import Store from "./Store";
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const App: React.FC = () => {
     const [collapsed] = useState(false);

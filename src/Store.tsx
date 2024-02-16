@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Space, Table, Tooltip, Cascader } from "antd";
 import type { TableProps } from "antd";
@@ -67,7 +68,7 @@ const App: React.FC = () => {
     if (import.meta.env.PROD) {
         host = "https://hunter.atang.tech";
     }
-    async function list(qs) {
+    async function list(qs: string | undefined) {
         setLoading(true);
         const qsArr = ["limit=1000"];
         if (qs) {
@@ -81,28 +82,30 @@ const App: React.FC = () => {
     }
 
     async function init() {
-        list();
+        list("");
         const prefecturesRes = await axios.get(`${host}/api/prefectures`);
-        const prefecturesArr = prefecturesRes.data.map((i) => ({
-            value: i.key,
-            label: i.label,
-            isLeaf: false,
-        }));
+        const prefecturesArr = prefecturesRes.data.map(
+            (i: { key: any; label: any }) => ({
+                value: i.key,
+                label: i.label,
+                isLeaf: false,
+            })
+        );
         setOptions(prefecturesArr);
     }
 
-    const onChange = (value, selectedOptions) => {
+    const onChange = (value: string | any[]) => {
         if (value.length === 2) {
             list(`url=${value[0]}/${value[1].replace("-", "/")}`);
         }
     };
 
-    const loadData = async (selectedOptions) => {
+    const loadData = async (selectedOptions: string | any[]) => {
         const targetOption = selectedOptions[selectedOptions.length - 1];
         const areas = await axios.get(
             `${host}/api/areas?prefecture=${targetOption.value}`
         );
-        const arr = areas.data.map((i) => ({
+        const arr = areas.data.map((i: { key: string; label: string }) => ({
             value: i.key,
             label: i.label,
         }));
