@@ -95,8 +95,10 @@ const App: React.FC = () => {
     }
 
     const onChange = (value: string | any[]) => {
-        if (value && value.length === 2) {
-            list(`url=${value[0]}/${value[1].replace("-", "/")}`);
+        if (value) {
+            if (value.length === 2) {
+                list(`url=${value[0]}/${value[1].replace("-", "/")}`);
+            }
         } else {
             list("");
         }
