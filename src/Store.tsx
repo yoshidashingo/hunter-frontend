@@ -70,7 +70,7 @@ const App: React.FC = () => {
     }
     async function list(qs: string | undefined) {
         setLoading(true);
-        const qsArr = ["limit=1000"];
+        const qsArr = ["limit=10000"];
         if (qs) {
             qsArr.push(qs);
         }
