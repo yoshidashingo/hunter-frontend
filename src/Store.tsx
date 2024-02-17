@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Space, Table, Tooltip, Cascader } from "antd";
+import { Space, Table, Cascader } from "antd";
 import type { TableProps } from "antd";
 import axios from "axios";
 import moment from "moment";
