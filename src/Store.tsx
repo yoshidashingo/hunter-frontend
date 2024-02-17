@@ -47,17 +47,17 @@ const columns: TableProps["columns"] = [
                 .format("YYYY-MM-DD");
         },
     },
-    {
-        title: "操作",
-        key: "action",
-        render: () => (
-            <Tooltip placement="top" title="未実装">
-                <Space size="middle">
-                    <a>詳細</a>
-                </Space>
-            </Tooltip>
-        ),
-    },
+    // {
+    //     title: "操作",
+    //     key: "action",
+    //     render: () => (
+    //         <Tooltip placement="top" title="未実装">
+    //             <Space size="middle">
+    //                 <a>詳細</a>
+    //             </Space>
+    //         </Tooltip>
+    //     ),
+    // },
 ];
 
 const App: React.FC = () => {
