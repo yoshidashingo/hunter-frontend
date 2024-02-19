@@ -112,19 +112,20 @@ const App = () => {
     const [options, setOptions] = useState([]);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [genre, setGenre] = useState("");
+    const [area, setArea] = useState("");
     let host = "";
     if (import.meta.env.PROD) {
         host = "https://hunter.atang.tech";
     }
-    async function list({ url, genre }) {
+    async function list() {
         setLoading(true);
         const qsArr = ["limit=10000"];
-        if (url) {
-            qsArr.push(`url=${url}`);
-        }
-        console.log("genre:", genre);
         if (genre) {
             qsArr.push(`genre=${genre}`);
+        }
+        if (area) {
+            qsArr.push(`url=${area}`);
         }
         const apiUrl = host + "/api/stores?" + qsArr.join("&");
         const res = await axios.get(apiUrl);
@@ -147,10 +148,10 @@ const App = () => {
     const onChange = (value) => {
         if (value) {
             if (value.length === 2) {
-                list({ url: `${value[0]}/${value[1].replace("-", "/")}` });
+                setArea(`${value[0]}/${value[1].replace("-", "/")}`);
             }
         } else {
-            list("");
+            setArea("");
         }
     };
 
@@ -159,8 +160,8 @@ const App = () => {
         if (value !== "全部") {
             result = value;
         }
-
-        list({ genre: result });
+        setGenre(result);
+        // list({ genre: result });
     };
 
     const loadData = async (selectedOptions) => {
@@ -183,6 +184,10 @@ const App = () => {
     useEffect(() => {
         init();
     }, []);
+
+    useEffect(() => {
+        list();
+    }, [genre, area]);
 
     return (
         <div>
