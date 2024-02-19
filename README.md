@@ -1,23 +1,8 @@
-# tabelog-crawler-frontend
-SaaS「新店舗ハンター」
+# React + Vite
 
-## 機能
-- ユーザー管理(新規/ログイン/ログアウト)
-- 契約管理(プラン/契約(新規/プラン変更/解約)/Stripeとの連携)
-- 新店舗管理(一覧表示・フィルタ(作成日/エリア/ジャンル)・検索(店名)/詳細表示)
-- ※データはDL禁止
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 画面
-- [ ] **新店舗一覧画面** -> フィルタや検索
-- [ ] ユーザー登録
-- [ ] ログイン画面
-- [ ] 現在の契約＋候補プラン表示画面
-- [ ] プラン変更画面 -> Stripe連携
+Currently, two official plugins are available:
 
-## プラン
-- 支払い方法 = 月額 or 年額
-  - ※年額は10ヶ月分(2ヶ月分お得)
-- プランTier
-  - Starter : $50/月($500/年) 当日分のみ閲覧・検索可能
-  - Professional : $300/月($3,000/年) 過去2ヶ月分の期間が表示・検索可能
-  - Enterprise : $1,000/月($10,000/年) データのExportが可能
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

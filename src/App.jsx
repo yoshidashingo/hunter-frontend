@@ -5,7 +5,7 @@ import Store from "./Store";
 
 const { Sider, Content } = Layout;
 
-const App: React.FC = () => {
+const App = () => {
     const [collapsed] = useState(false);
     const {
         token: { colorBgContainer, borderRadiusLG },
