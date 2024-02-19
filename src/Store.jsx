@@ -1,5 +1,5 @@
 import React from "react";
-import { Space, Table, Cascader } from "antd";
+import { Space, Table, Cascader, Select } from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -25,8 +25,8 @@ const columns = [
         title: "住所",
         key: "address",
         dataIndex: "address",
-        render: (_, { address }) => {
-            const href = "https://www.google.com/maps?q=" + address;
+        render: (_, { address, name }) => {
+            const href = `https://www.google.com/maps?q=${address} ${name}`;
             return (
                 <a href={href} target="_blank">
                     {address}
@@ -58,6 +58,56 @@ const columns = [
     // },
 ];
 
+const genres = [
+    "全部",
+    "和食",
+    "日本料理",
+    "寿司",
+    "海鮮・魚介",
+    "そば（蕎麦）",
+    "うなぎ",
+    "焼き鳥",
+    "お好み焼き",
+    "もんじゃ焼き",
+    "洋食",
+    "フレンチ",
+    "イタリアン",
+    "スペイン料理",
+    "ステーキ",
+    "中華料理",
+    "韓国料理",
+    "タイ料理",
+    "ラーメン",
+    "カレー",
+    "鍋",
+    "もつ鍋",
+    "居酒屋",
+    "パン",
+    "スイーツ",
+    "バー・お酒",
+    "天ぷら",
+    "焼肉",
+    "料理旅館",
+    "ビストロ",
+    "ハンバーグ",
+    "とんかつ",
+    "串揚げ",
+    "うどん",
+    "しゃぶしゃぶ",
+    "沖縄料理",
+    "ハンバーガー",
+    "パスタ",
+    "ピザ",
+    "餃子",
+    "ホルモン",
+    "カフェ",
+    "喫茶店",
+    "ケーキ",
+    "タピオカ",
+    "食堂",
+    "ビュッフェ・バイキング",
+];
+
 const App = () => {
     const [options, setOptions] = useState([]);
     const [data, setData] = useState([]);
@@ -66,14 +116,18 @@ const App = () => {
     if (import.meta.env.PROD) {
         host = "https://hunter.atang.tech";
     }
-    async function list(qs) {
+    async function list({ url, genre }) {
         setLoading(true);
         const qsArr = ["limit=10000"];
-        if (qs) {
-            qsArr.push(qs);
+        if (url) {
+            qsArr.push(`url=${url}`);
         }
-        const url = host + "/api/stores?" + qsArr.join("&");
-        const res = await axios.get(url);
+        console.log("genre:", genre);
+        if (genre) {
+            qsArr.push(`genre=${genre}`);
+        }
+        const apiUrl = host + "/api/stores?" + qsArr.join("&");
+        const res = await axios.get(apiUrl);
         const data = res.data.stores;
         setData(data);
         setLoading(false);
@@ -93,11 +147,20 @@ const App = () => {
     const onChange = (value) => {
         if (value) {
             if (value.length === 2) {
-                list(`url=${value[0]}/${value[1].replace("-", "/")}`);
+                list({ url: `${value[0]}/${value[1].replace("-", "/")}` });
             }
         } else {
             list("");
         }
+    };
+
+    const handleSelectChange = (value) => {
+        let result = "";
+        if (value !== "全部") {
+            result = value;
+        }
+
+        list({ genre: result });
     };
 
     const loadData = async (selectedOptions) => {
@@ -130,6 +193,14 @@ const App = () => {
                     loadData={loadData}
                     onChange={onChange}
                     changeOnSelect
+                />
+                <div style={{ marginLeft: 40 }}>ジャンル: </div>
+                <Select
+                    style={{
+                        width: 120,
+                    }}
+                    onChange={handleSelectChange}
+                    options={genres.map((i) => ({ value: i, label: i }))}
                 />
             </Space>
             <Table
