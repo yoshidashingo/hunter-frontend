@@ -133,7 +133,7 @@ const App = () => {
     }
     async function list() {
         setLoading(true);
-        const qsArr = ["limit=10000"];
+        const qsArr = ["limit=500"];
         if (genre) {
             qsArr.push(`genre=${genre}`);
         }
