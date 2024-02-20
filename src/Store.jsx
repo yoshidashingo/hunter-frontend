@@ -1,8 +1,20 @@
 import React from "react";
-import { Space, Table, Cascader, Select } from "antd";
+import {
+    Space,
+    Table,
+    Cascader,
+    Select,
+    Form,
+    Button,
+    Col,
+    Divider,
+    Row,
+} from "antd";
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { DownloadOutlined } from "@ant-design/icons";
+
 const JAPAN_OFFSET = "+0900";
 
 const columns = [
@@ -111,6 +123,7 @@ const genres = [
 const App = () => {
     const [options, setOptions] = useState([]);
     const [data, setData] = useState([]);
+    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [genre, setGenre] = useState("");
     const [area, setArea] = useState("");
@@ -131,6 +144,7 @@ const App = () => {
         const res = await axios.get(apiUrl);
         const data = res.data.stores;
         setData(data);
+        setTotal(res.data.count);
         setLoading(false);
     }
 
@@ -181,6 +195,27 @@ const App = () => {
         setOptions([...options]);
     };
 
+    const handleExport = async () => {
+        const json = data.map((i) => {
+            return {
+                name: i.name,
+                tel: i.tel,
+                genre: i.category,
+                address: i.address,
+            };
+        });
+        const res = await axios.post(host + "/api/stores/export", {
+            data: json,
+        });
+        const csv = res.data.csv;
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.setAttribute("href", url);
+        a.setAttribute("download", `download_${Date.now()}.csv`);
+        a.click();
+    };
+
     useEffect(() => {
         init();
     }, []);
@@ -190,31 +225,54 @@ const App = () => {
     }, [genre, area]);
 
     return (
-        <div>
-            <Space style={{ marginBottom: 20 }}>
-                <div>エリア: </div>
-                <Cascader
-                    options={options}
-                    loadData={loadData}
-                    onChange={onChange}
-                    changeOnSelect
-                />
-                <div style={{ marginLeft: 40 }}>ジャンル: </div>
-                <Select
-                    style={{
-                        width: 120,
-                    }}
-                    onChange={handleSelectChange}
-                    options={genres.map((i) => ({ value: i, label: i }))}
-                />
-            </Space>
+        <Space direction="vertical" size="middle" style={{ display: "flex" }}>
+            <Form layout="inline">
+                <div style={{ display: "flex", width: "100%" }}>
+                    <Form.Item label="エリア">
+                        <Cascader
+                            options={options}
+                            loadData={loadData}
+                            onChange={onChange}
+                            changeOnSelect
+                            style={{ width: 150 }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item style={{ marginLeft: 20 }} label="ジャンル">
+                        <Select
+                            defaultValue="全部"
+                            style={{
+                                width: 120,
+                            }}
+                            onChange={handleSelectChange}
+                            options={genres.map((i) => ({
+                                value: i,
+                                label: i,
+                            }))}
+                        />
+                    </Form.Item>
+
+                    <Button
+                        style={{ marginLeft: "auto" }}
+                        type="primary"
+                        onClick={handleExport}
+                        icon={<DownloadOutlined />}
+                    />
+                </div>
+            </Form>
+
             <Table
                 loading={loading}
                 rowKey="_id"
                 columns={columns}
                 dataSource={data}
+                pagination={{
+                    defaultPageSize: 10,
+                    total: total,
+                    showTotal: (total) => `全${total}件`,
+                }}
             />
-        </div>
+        </Space>
     );
 };
 
